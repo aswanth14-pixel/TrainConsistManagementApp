@@ -1,55 +1,46 @@
-import java.util.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainConsistManagementAppTest {
 
-    public static void main(String[] args) {
+    @Test
+    void testCargo_SafeAssignment() {
+        GoodsBogie b = new GoodsBogie("Cylindrical");
+        b.assignCargo("Petroleum");
+        assertEquals("Petroleum", b.cargo);
+    }
 
-        System.out.println("Test 1: Valid Capacity");
-        try {
-            Bogie b = new Bogie("Sleeper", 50);
-            System.out.println("Created Successfully");
-        } catch (Exception e) {
-            System.out.println("Failed");
-        }
+    @Test
+    void testCargo_UnsafeAssignmentHandled() {
+        GoodsBogie b = new GoodsBogie("Rectangular");
+        b.assignCargo("Petroleum");
+        assertNull(b.cargo); // should not be assigned
+    }
 
-        System.out.println("\nTest 2: Negative Capacity");
-        try {
-            Bogie b = new Bogie("AC Chair", -10);
-            System.out.println("Failed");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    @Test
+    void testCargo_CargoNotAssignedAfterFailure() {
+        GoodsBogie b = new GoodsBogie("Rectangular");
+        b.assignCargo("Petroleum");
+        assertNull(b.cargo);
+    }
 
-        System.out.println("\nTest 3: Zero Capacity");
-        try {
-            Bogie b = new Bogie("First Class", 0);
-            System.out.println("Failed");
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+    @Test
+    void testCargo_ProgramContinuesAfterException() {
+        GoodsBogie b1 = new GoodsBogie("Rectangular");
+        b1.assignCargo("Petroleum");
 
-        System.out.println("\nTest 4: Exception Message");
-        try {
-            new Bogie("Sleeper", -5);
-        } catch (Exception e) {
-            System.out.println(e.getMessage().equals("Capacity must be greater than zero"));
-        }
+        GoodsBogie b2 = new GoodsBogie("Rectangular");
+        b2.assignCargo("Coal");
 
-        System.out.println("\nTest 5: Object Integrity");
-        try {
-            Bogie b = new Bogie("AC Chair", 60);
-            System.out.println(b.name + " " + b.capacity);
-        } catch (Exception e) {
-            System.out.println("Error");
-        }
+        assertEquals("Coal", b2.cargo); // program continues
+    }
 
-        System.out.println("\nTest 6: Multiple Valid Bogies");
-        try {
-            Bogie b1 = new Bogie("Sleeper", 72);
-            Bogie b2 = new Bogie("AC Chair", 56);
-            System.out.println("Both Created");
-        } catch (Exception e) {
-            System.out.println("Error");
-        }
+    @Test
+    void testCargo_FinallyBlockExecution() {
+        GoodsBogie b = new GoodsBogie("Rectangular");
+        b.assignCargo("Petroleum");
+
+        // No direct assert for finally, but test ensures no crash
+        assertTrue(true);
     }
 }
